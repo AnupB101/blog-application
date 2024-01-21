@@ -23,10 +23,9 @@ public class Post {
     @Column(name ="description")
     @NotNull
     private String description;
-
     @NotNull
     @Column(name = "content")
-    private String Content;
+    private String content;
 
 
 }
