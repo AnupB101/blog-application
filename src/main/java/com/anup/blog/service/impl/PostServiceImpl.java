@@ -27,10 +27,7 @@ public class PostServiceImpl implements PostService {
     public PostDto createPost(PostDto postDto) {
        //convert dto to entity
        Post post = new Post();
-     // post.setTitle(postDto.getTitle());
-     //post.setId(postDto.getId());
-     // post.setDescription(postDto.getDescription());
-     // post.setContent(postDto.getContent());
+
 
       BeanUtils.copyProperties(postDto, post);
       Post newPost = postRepository.save(post);
@@ -38,11 +35,6 @@ public class PostServiceImpl implements PostService {
       //convert entity to Dto
         PostDto newPostDto = new PostDto();
         BeanUtils.copyProperties(postDto, newPostDto);
-       // postResponse.setId(newPost.getId());
-        //postResponse.setDescription(newPost.getDescription());
-        //postResponse.setTitle(newPost.getTitle());
-       // postResponse.setContent(newPost.getContent());
-
 
         return newPostDto;
     }
@@ -78,7 +70,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto updatePost(PostDto postDto, long id) throws ResourceNotFoundException {
-       //get pose by id from the data base
+       //get post by id from the database
         PostDto pd = new PostDto();
         Post post = postRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("post","id",id));
         post.setTitle(postDto.getTitle());
@@ -91,5 +83,23 @@ public class PostServiceImpl implements PostService {
         return pd;
     }
 
+    @Override
+    public void deletePostById(long id) throws ResourceNotFoundException {
+        Post post    = postRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("post", "id", id));
+        postRepository.delete(post);
+    }
+
+
+
 
 }
+
+
+// postResponse.setId(newPost.getId());
+//postResponse.setDescription(newPost.getDescription());
+//postResponse.setTitle(newPost.getTitle());
+// postResponse.setContent(newPost.getContent());
+// post.setTitle(postDto.getTitle());
+//post.setId(postDto.getId());
+// post.setDescription(postDto.getDescription());
+// post.setContent(postDto.getContent());

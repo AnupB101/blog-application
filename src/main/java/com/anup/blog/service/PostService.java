@@ -15,5 +15,6 @@ public interface PostService {
 
     PostDto updatePost(PostDto postDto, long id) throws ResourceNotFoundException;
 
+    void deletePostById(long id) throws ResourceNotFoundException;
 
 }

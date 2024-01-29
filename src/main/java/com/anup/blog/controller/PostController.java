@@ -3,6 +3,8 @@ package com.anup.blog.controller;
 import com.anup.blog.exception.ResourceNotFoundException;
 import com.anup.blog.payload.PostDto;
 import com.anup.blog.service.PostService;
+
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,7 @@ public class PostController {
     }
 
     @PostMapping //http://localhost:8080/api/posts
-    public ResponseEntity<PostDto>createPost(@RequestBody PostDto postDto){
+    public ResponseEntity<PostDto>createPost(@Valid @RequestBody PostDto postDto){
 
        return new ResponseEntity<>(postService.createPost(postDto),HttpStatus.CREATED);
     }
@@ -35,7 +37,7 @@ public class PostController {
         return postService.getAllPosts(pageNo,pageSize);
     }
 
-    @GetMapping("/{id}") //http://localhost:8080/api/posts
+    @GetMapping("/{id}") //http://localhost:8080/api/posts/id
     public ResponseEntity<PostDto> getPostById(@PathVariable(name="id")long id) throws ResourceNotFoundException {
         return ResponseEntity.ok(postService.findById(id));
 
@@ -48,5 +50,13 @@ public class PostController {
         return new ResponseEntity<>(postResponse,HttpStatus.OK);
     }
 
+    //Delete post Rest API
+    @DeleteMapping("/{id}")//http://localhost:8080/api/posts/id
+    public ResponseEntity<String>deletePost(@PathVariable(name="id")long id) throws ResourceNotFoundException {
+
+        postService.deletePostById(id);
+        return new ResponseEntity<>("post deleted successfully", HttpStatus.OK);
+
+    }
 
 }
