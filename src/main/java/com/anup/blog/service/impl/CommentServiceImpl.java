@@ -59,10 +59,17 @@ public class CommentServiceImpl implements CommentService {
         return message;
     }
 
+    @Override
+    public CommentDto getCommentById(Long postId, Long commentId) throws ResourceNotFoundException {
+
+                Post post = postRepository.findById(postId).orElseThrow(()->new ResourceNotFoundException("post", "id", postId));
+        Comment existingComment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResourceNotFoundException("comment","cid", commentId));
 
 
 
-
+        return null;
+    }
 
 
     public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository) {

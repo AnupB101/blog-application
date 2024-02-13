@@ -6,7 +6,7 @@ import com.anup.blog.payload.PostDto;
 import java.util.List;
 
 public interface PostService {
-    PostDto createPost(PostDto postDto);
+    PostDto createPost(PostDto postDto, Long uid, String catName) throws ResourceNotFoundException;
 
     List<PostDto> getAllPosts(int pageNo, int pageSize);
 

@@ -1,10 +1,15 @@
 package com.anup.blog.service.impl;
 
+import com.anup.blog.entity.Category;
 import com.anup.blog.entity.Post;
+import com.anup.blog.entity.User;
 import com.anup.blog.exception.ResourceNotFoundException;
 import com.anup.blog.payload.PostDto;
+import com.anup.blog.repository.CategoryRepository;
 import com.anup.blog.repository.PostRepository;
+import com.anup.blog.repository.UserRepository;
 import com.anup.blog.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,30 +18,56 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
 
-   private PostRepository postRepository;
+   private final PostRepository postRepository;
+   private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
-   public PostServiceImpl(PostRepository postRepository) {
+    public PostServiceImpl(PostRepository postRepository, CategoryRepository categoryRepository, UserRepository userRepository, ModelMapper modelMapper) {
         this.postRepository = postRepository;
+        this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
     }
 
+
     @Override
-    public PostDto createPost(PostDto postDto) {
-       //convert dto to entity
-       Post post = new Post();
+    public PostDto createPost(PostDto postDto, Long uid, String catName) throws ResourceNotFoundException {
+        User user = userRepository.findById(uid)
+                .orElseThrow(() -> new ResourceNotFoundException("User","uid", uid));
+        Optional<Category> cat = categoryRepository.findByTitle(catName);
+        Category category;
+        if(cat.isEmpty()) {
+            category=new Category();
+            category.setTitle(catName);
+        }else {
+            category=cat.get();
+        }
+        String message = "Post not created";
+        Post post = new Post();
+        BeanUtils.copyProperties(postDto, post);
 
+        // Setting the user for the post
+        post.(user);
 
-      BeanUtils.copyProperties(postDto, post);
-      Post newPost = postRepository.save(post);
+        // Adding the category to the post
+        post.getCategory().add(category);
 
-      //convert entity to Dto
-        PostDto newPostDto = new PostDto();
-        BeanUtils.copyProperties(postDto, newPostDto);
+        category.getCategoriesPosts().add(post);
 
-        return newPostDto;
+        Post savedPost = postDaoImpl.save(post);
+
+        if (savedPost != null) {
+            message = "Post created, in category: " + category.getCategoryName();
+        } else {
+            message = "Failed to create post.";
+        }
+        return message;
     }
 
     @Override
@@ -89,17 +120,13 @@ public class PostServiceImpl implements PostService {
         postRepository.delete(post);
     }
 
+    private PostDto mapToDTO(Post post){
+        return modelMapper.map(post, PostDto.class);
+    }
 
-
+    private Post mapToEntity(PostDto postDto){
+        return modelMapper.map(postDto, Post.class);
+    }
 
 }
 
-
-// postResponse.setId(newPost.getId());
-//postResponse.setDescription(newPost.getDescription());
-//postResponse.setTitle(newPost.getTitle());
-// postResponse.setContent(newPost.getContent());
-// post.setTitle(postDto.getTitle());
-//post.setId(postDto.getId());
-// post.setDescription(postDto.getDescription());
-// post.setContent(postDto.getContent());

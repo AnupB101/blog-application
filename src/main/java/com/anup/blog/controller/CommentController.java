@@ -29,7 +29,7 @@ public class CommentController {
 
     }
 
-    @GetMapping("/{postId}")
+    @GetMapping("/posts/{postId}/comments")
     public ResponseEntity<Map<String, List<CommentDto>>> getCommentsByPost(@PathVariable(value = "postId") long postId) throws ResourceNotFoundException {
         List<CommentDto> getComments = commentService.getCommentsByPostId(postId);
         String message = "comments of pid:" + postId;

@@ -22,9 +22,9 @@ public class PostController {
     }
 
     @PostMapping //http://localhost:8080/api/posts
-    public ResponseEntity<PostDto>createPost(@Valid @RequestBody PostDto postDto){
+    public ResponseEntity<PostDto>createPost(@Valid @RequestBody PostDto postDto) throws ResourceNotFoundException {
 
-       return new ResponseEntity<>(postService.createPost(postDto),HttpStatus.CREATED);
+       return new ResponseEntity<>(postDto,HttpStatus.OK);
     }
 
     //Get all post
@@ -32,7 +32,7 @@ public class PostController {
     @GetMapping //http://localhost:8080/api/posts
     public List<PostDto>getAllPosts(
             @RequestParam(value ="pageNo", defaultValue = "0", required = false)int pageNo,
-            @RequestParam(value = "pagesize", defaultValue = "10", required = false) int pageSize
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
     ){
         return postService.getAllPosts(pageNo,pageSize);
     }

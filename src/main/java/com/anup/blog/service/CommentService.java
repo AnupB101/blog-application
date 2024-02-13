@@ -19,6 +19,8 @@ public interface CommentService {
 
     public String deleteComment(Long cid) throws ResourceNotFoundException;
 
+    CommentDto getCommentById(Long postId, Long commentId) throws ResourceNotFoundException;
+
 
 
 

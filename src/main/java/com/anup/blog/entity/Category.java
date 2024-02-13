@@ -14,16 +14,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "category")
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
+    @Column(name = "catId")
     private Long id;
+    @Column(name = "title")
+    private String title;
 
-    private String Name;
 
-    private String description;
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Post> posts;
+
 
 }

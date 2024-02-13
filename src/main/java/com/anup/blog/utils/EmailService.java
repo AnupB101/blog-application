@@ -29,7 +29,7 @@ public class EmailService implements CommandLineRunner {
         {
             SimpleMailMessage msg = new SimpleMailMessage();
             msg.setFrom(sender);
-            msg.setTo("bannetanup@gmail.com");
+            msg.setTo("basnetanup@gmail.com");
             msg.setSubject("What is this code");
             msg.setText("Practice Twice");
             javamailSender.send(msg);
